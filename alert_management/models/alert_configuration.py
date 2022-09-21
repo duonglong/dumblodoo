@@ -18,7 +18,7 @@ class AlertConfiguration(models.Model):
     _name = 'alert.configuration'
 
     name = fields.Char(string=_("Name"), required=True)
-    model_id = fields.Many2one(string=_("Object"), comodel_name='ir.model.model')
+    model_id = fields.Many2one(string=_("Object"), comodel_name='ir.model')
     left_field_id = fields.Many2one(string=_("Left"), comodel_name="ir.model.fields")
     right_field_id = fields.Many2one(string=_("Right"), comodel_name="ir.model.fields")
     operator = fields.Selection(string=_("Operator"), selection=OPERATORS)
