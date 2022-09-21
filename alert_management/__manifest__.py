@@ -14,7 +14,12 @@ TO_FILL_IN
     'images': [],
     'depends': ['base'],
     'data': [
+        'data/ir_cron.xml',
+        'security/alert_security.xml',
+        'security/ir.model.access.csv',
         'views/alert_configuration.xml',
+        'views/alert_management_menuitem.xml',
+
     ],
     'demo': [
     ],

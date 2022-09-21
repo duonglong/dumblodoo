@@ -24,3 +24,6 @@ class AlertConfiguration(models.Model):
     operator = fields.Selection(string=_("Operator"), selection=OPERATORS)
     threshold_type = fields.Selection(string=_("Threshold Type"), selection=THRESHOLD_TYPE)
     threshold_value = fields.Float(string=_("Threshold"))
+
+    def _send_alert(self):
+        pass

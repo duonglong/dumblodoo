@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top menu item -->
+    <menuitem name="Alert Management"
+        id="menu_alert_management"
+        groups="alert_management.group_alert_management"
+        web_icon="account,static/description/icon.png"
+        sequence="55">
+        <menuitem id="menu_alert_configuration" name="Alert Configuration" action="alert_configuration_action" groups="alert_management.group_alert_management" sequence="1"/>
+    </menuitem>
+</odoo>
