@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="alert_configuration_form_view" model="ir.ui.view">
+            <field name="name">Alert Configuration FormView</field>
+            <field name="model">alert.configuration</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="model_id"/>
+                            </group>
+                            <group>
+                                <field name="left_field_id" domain="[('model_id', '=', model_id)]"/>
+                                <field name="operator"/>
+                                <field name="right_field_id" domain="[('model_id', '=', model_id)]"/>
+                                <field name="threshold_type"/>
+                                <field name="threshold_value"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="alert_configuration_tree_view" model="ir.ui.view">
+            <field name="name">Alert Configuration Tree View</field>
+            <field name="model">alert.configuration</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="model_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="alert_configuration_action" model="ir.actions.act_window">
+            <field name="name">Alert Configuration</field>
+            <field name="res_model">alert.configuration</field>
+            <field name="view_mode">list,form</field>
+        </record>
+    </data>
+</odoo>
