@@ -13,5 +13,12 @@
 			<field name="comment">Configure alert in the system</field>
 			<field name="category_id" ref="alert_management.module_category_alert_management"/>
 		</record>
+		
+		<record id="group_alert_management_admin" model="res.groups">
+			<field name="name">Alert Management Admin</field>
+			<field name="comment">Configure alert in the system</field>
+			<field name="category_id" ref="alert_management.module_category_alert_management"/>
+			<field name="implied_ids" eval="[(4, ref('alert_management.group_alert_management'))]"/>
+		</record>
 	</data>
 </odoo>

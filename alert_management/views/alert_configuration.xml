@@ -1,45 +1,59 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <data>
-        <record id="alert_configuration_form_view" model="ir.ui.view">
-            <field name="name">Alert Configuration FormView</field>
-            <field name="model">alert.configuration</field>
-            <field name="arch" type="xml">
-                <form>
-                    <sheet>
-                        <group>
-                            <group>
-                                <field name="name"/>
-                                <field name="model_id"/>
-                            </group>
-                            <group>
-                                <field name="left_field_id" domain="[('model_id', '=', model_id)]"/>
-                                <field name="operator"/>
-                                <field name="right_field_id" domain="[('model_id', '=', model_id)]"/>
-                                <field name="threshold_type"/>
-                                <field name="threshold_value"/>
-                            </group>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="alert_configuration_tree_view" model="ir.ui.view">
-            <field name="name">Alert Configuration Tree View</field>
-            <field name="model">alert.configuration</field>
-            <field name="arch" type="xml">
-                <tree>
-                    <field name="name"/>
-                    <field name="model_id"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="alert_configuration_action" model="ir.actions.act_window">
-            <field name="name">Alert Configuration</field>
-            <field name="res_model">alert.configuration</field>
-            <field name="view_mode">list,form</field>
-        </record>
-    </data>
+	<data>
+		<record id="alert_configuration_form_view" model="ir.ui.view">
+			<field name="name">Alert Configuration FormView</field>
+			<field name="model">alert.configuration</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<header>
+							<button type="object" name="toggle_active" string="Archive"
+							        attrs="{'invisible': [('active', '=', False)]}"/>
+							<button type="object" name="toggle_active" string="Restore"
+							        attrs="{'invisible': [('active', '=', True)]}"/>
+						</header>
+						<group>
+							<group>
+								<field name="name" required="1"/>
+								<field name="model_id" required="1"/>
+								<field name="receiver_ids" widget="many2many_tags"/>
+								<field name="alert_type"/>
+							</group>
+							<group>
+								<field name="threshold_type" required="1"/>
+								<field name="field_id"
+								       domain="[('model_id', '=', model_id), ('ttype', 'in', ('float', 'integer'), ('store', '=', True))]"
+								       required="1"/>
+								<field name="operator" required="1"/>
+								<field name="threshold_value"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Contents" name="contents">
+								<field name="message"/>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		
+		<record id="alert_configuration_tree_view" model="ir.ui.view">
+			<field name="name">Alert Configuration Tree View</field>
+			<field name="model">alert.configuration</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name"/>
+					<field name="model_id"/>
+				</tree>
+			</field>
+		</record>
+		
+		<record id="alert_configuration_action" model="ir.actions.act_window">
+			<field name="name">Alert Configuration</field>
+			<field name="res_model">alert.configuration</field>
+			<field name="view_mode">list,form</field>
+		</record>
+	</data>
 </odoo>
