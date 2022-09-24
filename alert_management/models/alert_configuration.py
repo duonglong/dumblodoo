@@ -30,6 +30,7 @@ class AlertConfiguration(models.Model):
     receiver_ids = fields.Many2many(string=_("Receivers"), comodel_name='res.partner')
     alert_type = fields.Selection(selection=ALERT_TYPE, default='email', required=1)
     active = fields.Boolean(default=True)
+    compared_field
 
     def send_alert(self):
         alerter = self.env['alert.sender.factory'].get_alerter(self)

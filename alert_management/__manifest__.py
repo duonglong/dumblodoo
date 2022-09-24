@@ -12,7 +12,7 @@ TO_FILL_IN
     'category': 'hidden',
     'website': 'https://apps.odoo.com/apps/modules/15.0/alert_configuration/',
     'images': [],
-    'depends': ['base'],
+    'depends': ['base', 'mail'],
     'data': [
         'data/ir_cron.xml',
         'security/alert_security.xml',
