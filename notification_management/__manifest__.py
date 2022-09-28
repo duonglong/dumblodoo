@@ -1,24 +1,26 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Alert Management',
+    'name': 'Notification Management',
     'version': '1.2',
-    'summary': 'Alert Management',
+    'summary': 'Notification Management',
     'sequence': 10,
     'description': """
-Alert management
+Notification management
 ====================
 TO_FILL_IN
     """,
     'category': 'hidden',
-    'website': 'https://apps.odoo.com/apps/modules/15.0/alert_configuration/',
+    'website': 'https://apps.odoo.com/apps/modules/15.0/notification_configuration/',
     'images': [],
     'depends': ['base', 'mail'],
     'data': [
         'data/ir_cron.xml',
-        'security/alert_security.xml',
+        'security/security.xml',
         'security/ir.model.access.csv',
-        'views/alert_configuration.xml',
-        'views/alert_management_menuitem.xml',
+        'views/notification_configuration.xml',
+        'views/notification_compare_fields.xml',
+        'views/notification_compare_value.xml',
+        'views/notification_management_menuitem.xml',
 
     ],
     'demo': [

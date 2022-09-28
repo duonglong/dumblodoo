@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <data>
-	<record id="send_alert_message" model="ir.cron">
-        <field name="name">Send Alert Message</field>
+	<record id="send_notification_message" model="ir.cron">
+        <field name="name">Send Notification Message</field>
         <field name="interval_number">5</field>
         <field name="interval_type">minutes</field>
         <field name="nextcall" eval="(DateTime.now().replace(hour=0, minute=5, second=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
         <field name="numbercall">-1</field>
-        <field name="model_id" ref="alert_management.model_alert_configuration" />
+        <field name="model_id" ref="notification_management.model_notification_configuration" />
         <field name="priority" eval="0"/>
         <field name="state">code</field>
-        <field name="code">model._send_alert()</field>
+        <field name="code">model._send_notification()</field>
 	</record>
 </data>

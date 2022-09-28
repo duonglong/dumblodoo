@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 	<data>
-		<record id="alert_configuration_form_view" model="ir.ui.view">
-			<field name="name">Alert Configuration FormView</field>
-			<field name="model">alert.configuration</field>
+		<record id="notification_configuration_form_view" model="ir.ui.view">
+			<field name="name">Notification Configuration FormView</field>
+			<field name="model">notification.configuration</field>
 			<field name="arch" type="xml">
 				<form>
 					<sheet>
 						<header>
+							<field name="active" invisible="1"/>
 							<button type="object" name="toggle_active" string="Archive"
 							        attrs="{'invisible': [('active', '=', False)]}"/>
 							<button type="object" name="toggle_active" string="Restore"
@@ -18,12 +19,12 @@
 								<field name="name" required="1"/>
 								<field name="model_id" required="1"/>
 								<field name="receiver_ids" widget="many2many_tags"/>
-								<field name="alert_type"/>
+								<field name="notification_type"/>
 							</group>
 							<group>
 								<field name="threshold_type" required="1"/>
 								<field name="field_id"
-								       domain="[('model_id', '=', model_id), ('ttype', 'in', ('float', 'integer'), ('store', '=', True))]"
+								       domain="[('model_id', '=', model_id), ('ttype', 'in', ('float', 'integer')), ('store', '=', True)]"
 								       required="1"/>
 								<field name="operator" required="1"/>
 								<field name="threshold_value"/>
@@ -39,9 +40,9 @@
 			</field>
 		</record>
 		
-		<record id="alert_configuration_tree_view" model="ir.ui.view">
-			<field name="name">Alert Configuration Tree View</field>
-			<field name="model">alert.configuration</field>
+		<record id="notification_configuration_tree_view" model="ir.ui.view">
+			<field name="name">Notification Configuration Tree View</field>
+			<field name="model">notification.configuration</field>
 			<field name="arch" type="xml">
 				<tree>
 					<field name="name"/>
@@ -50,9 +51,9 @@
 			</field>
 		</record>
 		
-		<record id="alert_configuration_action" model="ir.actions.act_window">
-			<field name="name">Alert Configuration</field>
-			<field name="res_model">alert.configuration</field>
+		<record id="notification_configuration_action" model="ir.actions.act_window">
+			<field name="name">Notification Configuration</field>
+			<field name="res_model">notification.configuration</field>
 			<field name="view_mode">list,form</field>
 		</record>
 	</data>

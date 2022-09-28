@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+	<data>
+		<record id="notification_compare_value_form_view" model="ir.ui.view">
+			<field name="name">notification.compare.value.form.view</field>
+			<field name="model">notification.compare.value</field>
+			<field name="inherit_id" ref="notification_management.notification_configuration_form_view"/>
+			<field name="mode">primary</field>
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='field_id']">
+					<field name="reference_value" domain="[('ttype', 'in', ('float', 'integer'))]"/>
+				</xpath>
+			</field>
+		</record>
+		
+		<record id="notification_compare_value_tree_view" model="ir.ui.view">
+			<field name="name">Notification Compare Value Tree View</field>
+			<field name="model">notification.compare.value</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name"/>
+					<field name="model_id"/>
+					<field name="field_id"/>
+					<field name="operator"/>
+					<field name="reference_value"/>
+					<field name="threshold_type"/>
+					<field name="threshold_value"/>
+				</tree>
+			</field>
+		</record>
+		
+		<record id="notification_compare_value_action" model="ir.actions.act_window">
+			<field name="name">Notification Compare Value</field>
+			<field name="res_model">notification.compare.value</field>
+			<field name="view_mode">list,form</field>
+		</record>
+	</data>
+</odoo>
