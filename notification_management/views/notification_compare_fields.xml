@@ -9,7 +9,7 @@
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='field_id']" position="after">
 					<field name="comparable_field_id"
-					       domain="[('model_id', '=', model_id), ('ttype', 'in', ('float', 'integer')), ('store', '=', True)]"/>
+					       domain="[('model_id', '=', model_id), ('ttype', 'in', ('float', 'integer'))]"/>
 				</xpath>
 			</field>
 		</record>

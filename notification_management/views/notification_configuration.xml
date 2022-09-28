@@ -24,7 +24,7 @@
 							<group>
 								<field name="threshold_type" required="1"/>
 								<field name="field_id"
-								       domain="[('model_id', '=', model_id), ('ttype', 'in', ('float', 'integer')), ('store', '=', True)]"
+								       domain="[('model_id', '=', model_id), ('ttype', 'in', ('float', 'integer'))]"
 								       required="1"/>
 								<field name="operator" required="1"/>
 								<field name="threshold_value"/>
