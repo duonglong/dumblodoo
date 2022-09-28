@@ -7,7 +7,7 @@
 			<field name="inherit_id" ref="notification_management.notification_configuration_form_view"/>
 			<field name="mode">primary</field>
 			<field name="arch" type="xml">
-				<xpath expr="//field[@name='field_id']">
+				<xpath expr="//field[@name='field_id']" position="after">
 					<field name="comparable_field_id"
 					       domain="[('model_id', '=', model_id), ('ttype', 'in', ('float', 'integer')), ('store', '=', True)]"/>
 				</xpath>
@@ -34,6 +34,9 @@
 			<field name="name">Notification Compare Fields</field>
 			<field name="res_model">notification.compare.fields</field>
 			<field name="view_mode">list,form</field>
+			<field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('notification_compare_fields_tree_view')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('notification_compare_fields_form_view')})]"/>
 		</record>
 	</data>
 </odoo>

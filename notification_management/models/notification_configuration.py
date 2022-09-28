@@ -7,7 +7,7 @@ _logger = logging.getLogger(__name__)
 
 
 OPERATORS = [
-    ('=', '='),
+    ('==', '='),
     ('>', '>'),
     ('<', '<'),
     ('>=', '>='),
@@ -23,7 +23,7 @@ ALERT_TYPE = [
     ('email', 'Email')
 ]
 
-class NotificationConfiguration(models.Model):
+class NotificationConfiguration(models.AbstractModel):
     _name = 'notification.configuration'
 
     CRITICAL_FIELDS = [
@@ -65,10 +65,29 @@ class NotificationConfiguration(models.Model):
         if self.check_condition(records):
             self.send_notification()
 
-
     def get_model_configurations(self, records):
         model_name = records._name
-        return self.search([('model_id.name', '=', model_name)])
+        return self.search([('model_id.model', '=', model_name)])
+
+    def check_condition(self, record):
+        value = self.get_condition_value(record, self.get_comparable_value(record))
+        expression = self.get_comparison_expression(value)
+        return eval(expression)
+
+    def get_comparable_value(self, record):
+        raise ValidationError(_("Get comparable Value is not implemented"))
+
+    def get_condition_value(self, record, compare_value):
+        field_value = getattr(record, self.field_id.name)
+        if self.threshold_type == 'amount':
+            value = field_value - compare_value
+        else:
+            value = (field_value / self.reference_value) * 100 if self.reference_value > 0 else 0
+        return value
+
+    @api.onchange('model_id')
+    def onchange_model_id(self):
+        self.field_id = [fields.Command.clear()]
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -95,11 +114,10 @@ class NotificationConfiguration(models.Model):
             self._register_hook()
             self.env.registry.registry_invalidated = True
 
-    def _register_hook(self):
+    def register_hook(self, config_model_name):
         """ Patch models that should trigger action rules based on creation,
             modification, deletion of records and form onchanges.
         """
-
         #
         # Note: the patched methods must be defined inside another function,
         # otherwise their closure may be wrong. For instance, the function
@@ -116,7 +134,7 @@ class NotificationConfiguration(models.Model):
             def create(self, vals_list, **kw):
                 # call original method
                 records = create.origin(self.with_env(self.env), vals_list, **kw)
-                notifications = self.env['notification.configuration'].get_model_configurations(records)
+                notifications = self.env[config_model_name].get_model_configurations(records)
                 if notifications:
                     notifications.check_and_send_notification(records)
                 return records.with_env(self.env)
@@ -125,43 +143,15 @@ class NotificationConfiguration(models.Model):
 
         def make_write():
             """ Instanciate a write method that processes action rules. """
-
             def write(self, vals, **kw):
                 write.origin(self.with_env(self.env), vals, **kw)
 
-                notifications = self.env['notification.configuration'].get_model_configurations(self)
+                notifications = self.env[config_model_name].get_model_configurations(self)
                 if notifications:
                     notifications.check_and_send_notification(self)
                 return True
 
             return write
-
-        def make_compute_field_value():
-            """ Instanciate a compute_field_value method that processes action rules. """
-
-            #
-            # Note: This is to catch updates made by field recomputations.
-            #
-            def _compute_field_value(self, field):
-                # determine fields that may trigger an action
-                stored_fields = [f for f in self.pool.field_computed[field] if f.store]
-                if not any(stored_fields):
-                    return _compute_field_value.origin(self, field)
-                # retrieve the action rules to possibly execute
-                notifications = self.env['notification.configuration'].get_model_configurations(self)
-                records = self.filtered('id').with_env(notifications.env)
-                if not (notifications and records):
-                    _compute_field_value.origin(self, field)
-                    return True
-
-                # call original method
-                _compute_field_value.origin(self, field)
-                # check postconditions, and execute actions on the records that satisfy them
-                notifications.check_and_send_notification(self)
-                return True
-
-            return _compute_field_value
-
 
         patched_models = defaultdict(set)
 
@@ -173,7 +163,7 @@ class NotificationConfiguration(models.Model):
 
         # retrieve all actions, and patch their corresponding model
         for config in self.with_context({}).search([]):
-            model_name = config.model_id.name
+            model_name = config.model_id.model
             Model = self.env.get(model_name)
 
             # Do not crash if the model of the base_action_rule was uninstalled
@@ -185,7 +175,6 @@ class NotificationConfiguration(models.Model):
 
             patch(Model, 'create', make_create())
             patch(Model, 'write', make_write())
-            patch(Model, '_compute_field_value', make_compute_field_value())
 
     def _unregister_hook(self):
         """ Remove the patches installed by _register_hook() """
