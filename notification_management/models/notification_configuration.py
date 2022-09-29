@@ -38,7 +38,7 @@ class NotificationConfiguration(models.AbstractModel):
     model_id = fields.Many2one(string=_("Object"), comodel_name='ir.model')
     field_id = fields.Many2one(string=_("Field"), comodel_name="ir.model.fields")
     operator = fields.Selection(string=_("Operator"), selection=OPERATORS, default='=')
-    threshold_type = fields.Selection(string=_("Diff Type"), selection=THRESHOLD_TYPE, default='percentage')
+    threshold_type = fields.Selection(string=_("Diff Type"), selection=THRESHOLD_TYPE, default='amount')
     threshold_value = fields.Float(string=_("Diff"))
     message = fields.Html('Contents', render_engine='qweb', compute=False, default='', sanitize_style=True)
     receiver_ids = fields.Many2many(string=_("Receivers"), comodel_name='res.partner')
@@ -80,7 +80,7 @@ class NotificationConfiguration(models.AbstractModel):
         if self.threshold_type == 'amount':
             value = field_value - compare_value
         else:
-            value = (field_value / self.reference_value) * 100 if self.reference_value > 0 else 0
+            value = (field_value / compare_value) * 100 if compare_value > 0 else 0
         return value
 
     @api.onchange('model_id')
@@ -176,7 +176,7 @@ class NotificationConfiguration(models.AbstractModel):
 
     def _unregister_hook(self):
         """ Remove the patches installed by _register_hook() """
-        NAMES = ['create', 'write', '_compute_field_value']
+        NAMES = ['create', 'write']
         for Model in self.env.registry.values():
             for name in NAMES:
                 try:
