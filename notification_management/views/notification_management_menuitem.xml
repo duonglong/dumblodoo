@@ -4,7 +4,7 @@
     <menuitem name="Notification Management"
         id="menu_notification_management"
         groups="notification_management.group_notification_management"
-        web_icon="account,static/description/icon.png"
+        web_icon="notification_management,static/description/icon.png"
         sequence="55">
         <menuitem id="menu_notification_compare_fields" name="Notification Compare Fields" action="notification_compare_fields_action" groups="notification_management.group_notification_management" sequence="10"/>
         <menuitem id="menu_notification_compare_value" name="Notification Compare Value" action="notification_compare_value_action" groups="notification_management.group_notification_management" sequence="20"/>
