@@ -45,10 +45,8 @@ class NotificationConfiguration(models.AbstractModel):
     notification_type = fields.Selection(selection=ALERT_TYPE, default='email', required=1)
     active = fields.Boolean(default=True)
 
-
-
     def send_notification(self):
-        messenger = self.env['notification.sender.factory'].get_notificationer(self)
+        messenger = self.env['notification.sender.factory'].get_sender(self)
         messenger.send_message()
 
     def check_condition(self, record):

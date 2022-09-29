@@ -1,27 +1,28 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class NotificationSenderFactory(models.AbstractModel):
     _name = 'notification.sender.factory'
 
-    notification_config_id = fields.Many2one(comodel_name="notification.configuration")
+    notification_config_id = None
 
     def get_all_senders(self):
         return {
             'email': self.env['email.notification']
         }
 
-    def get_notificationer(self):
+    @api.model
+    def get_sender(self, config):
         senders = self.get_all_senders()
-        notificationer = senders.get(self.notification_config_id.notification_type, None)
-        if notificationer:
-            values = self.get_notificationer_values()
-            notificationer = notificationer.create(values)
-            return notificationer
+        sender_obj = senders.get(config.notification_type, None)
+        if sender_obj is not None:
+            values = self._get_sender_values(config)
+            return sender_obj.create(values)
         return self.env['notification.sender']
 
-    def get_notificationer_values(self):
+    @api.model
+    def _get_sender_values(self, config):
         return {
-            'message': self.notification_config_id.message,
-            'partner_ids': [(6, 0, self.notification_config_id.partner_ids.ids)]
+            'message': config.message,
+            'receiver_ids': [(6, 0, config.receiver_ids.ids)]
         }
