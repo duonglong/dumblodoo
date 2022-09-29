@@ -30,7 +30,7 @@
 						</group>
 						<notebook>
 							<page string="Contents" name="contents">
-								<field name="message"/>
+								<field name="message" placeholder="Type your message here ..."/>
 							</page>
 						</notebook>
 					</sheet>
