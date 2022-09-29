@@ -7,7 +7,7 @@
 			<field name="inherit_id" ref="notification_management.notification_configuration_form_view"/>
 			<field name="mode">primary</field>
 			<field name="arch" type="xml">
-				<xpath expr="//field[@name='field_id']" position="after">
+				<xpath expr="//field[@name='operator']" position="after">
 					<field name="reference_value" />
 				</xpath>
 			</field>

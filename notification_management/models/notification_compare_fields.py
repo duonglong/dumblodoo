@@ -14,7 +14,7 @@ class NotificationCompareFields(models.Model):
         'comparable_field_id'
     ]
 
-    comparable_field_id = fields.Many2one(string=_("Field"), comodel_name="ir.model.fields")
+    comparable_field_id = fields.Many2one(string=_("Comparable Field"), comodel_name="ir.model.fields")
 
     def get_comparable_value(self, record):
         return getattr(record, self.comparable_field_id.name)

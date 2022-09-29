@@ -7,9 +7,10 @@
 			<field name="inherit_id" ref="notification_management.notification_configuration_form_view"/>
 			<field name="mode">primary</field>
 			<field name="arch" type="xml">
-				<xpath expr="//field[@name='field_id']" position="after">
+				<xpath expr="//field[@name='operator']" position="after">
 					<field name="comparable_field_id"
-					       domain="[('model_id', '=', model_id), ('ttype', 'in', ('float', 'integer'))]"/>
+						   required="1"
+					       domain="[('model_id', '=', model_id), ('ttype', 'in', ('float', 'integer', 'monetary'))]"/>
 				</xpath>
 			</field>
 		</record>
