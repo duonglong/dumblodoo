@@ -16,7 +16,7 @@ class NotificationCompareValue(models.Model):
 
     reference_value = fields.Float(string=_("Reference Value"))
 
-    def get_comparable_value(self, record):
+    def _get_comparable_value(self, record):
         return self.reference_value
 
     def _register_hook(self):

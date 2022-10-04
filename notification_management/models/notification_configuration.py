@@ -1,10 +1,10 @@
 from odoo import models, api, fields, _
 from collections import defaultdict
 from odoo.exceptions import ValidationError
+from odoo.tools import safe_eval
 import logging
 
 _logger = logging.getLogger(__name__)
-
 
 OPERATORS = [
     ('==', '='),
@@ -23,6 +23,7 @@ ALERT_TYPE = [
     ('email', 'Email')
 ]
 
+
 class NotificationConfiguration(models.AbstractModel):
     _name = 'notification.configuration'
 
@@ -36,6 +37,7 @@ class NotificationConfiguration(models.AbstractModel):
 
     name = fields.Char(string=_("Name"), required=True)
     model_id = fields.Many2one(string=_("Object"), comodel_name='ir.model')
+    model_name = fields.Char(related='model_id.model', string='Model Name', readonly=True, store=True)
     field_id = fields.Many2one(string=_("Field"), comodel_name="ir.model.fields")
     operator = fields.Selection(string=_("Operator"), selection=OPERATORS, default='=')
     threshold_type = fields.Selection(string=_("Diff Type"), selection=THRESHOLD_TYPE, default='amount')
@@ -43,16 +45,16 @@ class NotificationConfiguration(models.AbstractModel):
     message = fields.Html('Contents', render_engine='qweb', compute=False, default='', sanitize_style=True)
     receiver_ids = fields.Many2many(string=_("Receivers"), comodel_name='res.partner')
     notification_type = fields.Selection(selection=ALERT_TYPE, default='email', required=1)
+    filter_domain = fields.Char(string='Apply on',
+                                help="If present, this condition must be satisfied before sending notification.",
+                                default=[])
     active = fields.Boolean(default=True)
 
-    def send_notification(self):
+    def _send_notification(self):
         messenger = self.env['notification.sender.factory'].get_sender(self)
         messenger.send_message()
 
-    def check_condition(self, record):
-        raise ValidationError(_("Check condition wasn't implemented"))
-
-    def get_comparison_expression(self, value):
+    def _get_comparison_expression(self, value):
         return "{value} {operator} {threshold_value}".format(
             value=value,
             operator=self.operator,
@@ -60,22 +62,44 @@ class NotificationConfiguration(models.AbstractModel):
         )
 
     def check_and_send_notification(self, records):
-        if self.check_condition(records):
-            self.send_notification()
+        records = self._filter_by_domain(records)
+        if records and self._check_condition(records):
+            self._send_notification()
 
-    def get_model_configurations(self, records):
+    def _get_model_configurations(self, records):
         model_name = records._name
         return self.search([('model_id.model', '=', model_name)])
 
-    def check_condition(self, record):
-        value = self.get_condition_value(record, self.get_comparable_value(record))
-        expression = self.get_comparison_expression(value)
+    def _check_condition(self, record):
+        value = self._get_condition_value(record, self._get_comparable_value(record))
+        expression = self._get_comparison_expression(value)
         return eval(expression)
 
-    def get_comparable_value(self, record):
+    def _filter_by_domain(self, records):
+        """ Filter the records that satisfy the postcondition of notification ``self``. """
+        self_sudo = self.sudo()
+        if self_sudo.filter_domain and records:
+            domain = safe_eval.safe_eval(self_sudo.filter_domain, self._get_eval_context())
+            return records.sudo().filtered_domain(domain).with_env(records.env)
+        else:
+            return records
+
+    def _get_eval_context(self):
+        """ Prepare the context used when evaluating python code
+            :returns: dict -- evaluation context given to safe_eval
+        """
+        return {
+            'datetime': safe_eval.datetime,
+            'dateutil': safe_eval.dateutil,
+            'time': safe_eval.time,
+            'uid': self.env.uid,
+            'user': self.env.user,
+        }
+
+    def _get_comparable_value(self, record):
         raise ValidationError(_("Get comparable Value is not implemented"))
 
-    def get_condition_value(self, record, compare_value):
+    def _get_condition_value(self, record, compare_value):
         field_value = getattr(record, self.field_id.name)
         if self.threshold_type == 'amount':
             value = field_value - compare_value
@@ -116,6 +140,7 @@ class NotificationConfiguration(models.AbstractModel):
         """ Patch models that should trigger action rules based on creation,
             modification, deletion of records and form onchanges.
         """
+
         #
         # Note: the patched methods must be defined inside another function,
         # otherwise their closure may be wrong. For instance, the function
@@ -132,7 +157,7 @@ class NotificationConfiguration(models.AbstractModel):
             def create(self, vals_list, **kw):
                 # call original method
                 records = create.origin(self.with_env(self.env), vals_list, **kw)
-                notifications = self.env[config_model_name].get_model_configurations(records)
+                notifications = self.env[config_model_name]._get_model_configurations(records)
                 if notifications:
                     notifications.check_and_send_notification(records)
                 return records.with_env(self.env)
@@ -141,10 +166,11 @@ class NotificationConfiguration(models.AbstractModel):
 
         def make_write():
             """ Instanciate a write method that processes action rules. """
+
             def write(self, vals, **kw):
                 write.origin(self.with_env(self.env), vals, **kw)
 
-                notifications = self.env[config_model_name].get_model_configurations(self)
+                notifications = self.env[config_model_name]._get_model_configurations(self)
                 if notifications:
                     notifications.check_and_send_notification(self)
                 return True
@@ -168,7 +194,7 @@ class NotificationConfiguration(models.AbstractModel):
             if Model is None:
                 _logger.warning("Action rule with ID %d depends on model %s" %
                                 (config.id,
-                                model_name))
+                                 model_name))
                 continue
 
             patch(Model, 'create', make_create())
