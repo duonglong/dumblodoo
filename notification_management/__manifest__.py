@@ -12,7 +12,7 @@ TO_FILL_IN
     'category': 'hidden',
     'website': 'https://apps.odoo.com/apps/modules/15.0/notification_configuration/',
     'images': [],
-    'depends': ['base', 'mail'],
+    'depends': ['base', 'mail', 'product'],
     'data': [
         'data/ir_cron.xml',
         'security/security.xml',
