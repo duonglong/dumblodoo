@@ -4,7 +4,7 @@ RUN apt-get update
 
 RUN git clone -b 16.0 --depth 1 https://github.com/odoo/odoo.git /workspaces/odoo
 
-RUN cd /workspaces/odoo && sed -n -e '/^Depends:/,/^Pre/ s/ python3-\(.*\),/python3-\1/p' debian/control | sudo xargs apt-get install -y
+RUN cd /workspaces/odoo && sed -n -e '/^Depends:/,/^Pre/ s/ python3-\(.*\),/python3-\1/p' debian/control | sudo xargs apt-get install -y && pip install -r requirement.txt
 
 RUN npm install -g rtlcss
 
@@ -20,5 +20,7 @@ RUN sudo apt-get update
 # Install the latest version of PostgreSQL.
 # If you want a specific version, use 'postgresql-12' or similar instead of 'postgresql':
 RUN apt-get -y install postgresql
+
+RUN service postgresql start
 
 RUN sudo -u postgres createuser -s $USER && createdb $USER
