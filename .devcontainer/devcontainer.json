@@ -1,6 +1,6 @@
 {
   "build": { 
-    "dockerfile": "base.Dockerfile"
+    "dockerfile": "Dockerfile"
   },
   "customizations": {
       "vscode": {
