@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "name": "Odoo",
+            "type": "python",
+            "request": "launch",
+            "program": "/workspaces/odoo/odoo-bin",
+            "args": [
+                "-c", 
+                "/workspaces/odoo.conf"
+            ],
+            "console": "integratedTerminal"            
+        }
+    ]
+}
