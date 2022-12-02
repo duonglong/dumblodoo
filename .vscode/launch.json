@@ -6,10 +6,10 @@
             "name": "Odoo",
             "type": "python",
             "request": "launch",
-            "program": "/workspaces/odoo/odoo-bin",
+            "program": "/odoo/odoo-bin",
             "args": [
                 "-c", 
-                "/workspaces/odoo.conf"
+                "/etc/odoo.conf"
             ],
             "console": "integratedTerminal"            
         }

@@ -10,9 +10,9 @@ RUN npm install -g rtlcss
 
 RUN cp /odoo/debian/odoo.conf /etc/odoo.conf
 
-RUN echo "addons_path = $CODESPACE_VSCODE_FOLDER,/workspaces/odoo/addons" >> /etc/odoo.conf
+RUN echo "addons_path = /workspaces/$RepositoryName,/workspaces/odoo/addons" >> /etc/odoo.conf
 
-RUN echo "sed -i 's/odoo/codespace/g' /etc/odoo.conf"
+RUN sed -i 's/odoo/codespace/g' /etc/odoo.conf
 
 # Create the file repository configuration:
 RUN sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
@@ -27,4 +27,4 @@ RUN sudo apt-get update
 # If you want a specific version, use 'postgresql-12' or similar instead of 'postgresql':
 RUN apt-get -y install postgresql
 
-CMD service postgresql start && sudo -u postgres createuser -s codespace && createdb codespace
+CMD service postgresql start && sudo -u postgres createuser -s codespace
