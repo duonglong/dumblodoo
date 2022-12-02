@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/devcontainers/universal:2
 
-RUN apt-get update
+RUN apt-get update && apt-get install libsasl2-dev python-dev libldap2-dev libssl-dev
 
 RUN git clone -b 16.0 --depth 1 https://github.com/odoo/odoo.git /workspaces/odoo
 
@@ -23,4 +23,8 @@ RUN apt-get -y install postgresql
 
 RUN service postgresql start
 
-RUN sudo -u postgres createuser -s $USER && createdb $USER
+RUN sudo -u postgres createuser -s odoo && createdb odoo
+
+RUN cp /workspaces/odoo/debian/odoo.conf /workspaces/odoo.conf
+
+RUN echo "addons_path = $CODESPACE_VSCODE_FOLDER,/workspaces/odoo/addons" >> /workspaces/odoo.conf

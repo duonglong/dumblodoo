@@ -7,7 +7,17 @@
         "extensions": [
           "github.codespaces"          
         ]
+      },
+      "codespaces": {
+        "repositories": {
+          "odoo/enterprised": {
+            "permissions": {
+              "repository_projects": "read"
+            }
+          }
+        }
       }
+      
   },
   "features": {
   }
