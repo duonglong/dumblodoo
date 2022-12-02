@@ -27,4 +27,4 @@ RUN cp /odoo/debian/odoo.conf /etc/odoo.conf
 
 RUN echo "addons_path = $CODESPACE_VSCODE_FOLDER,/workspaces/odoo/addons" >> /etc/odoo.conf
 
-RUN echo 
+RUN echo "sed -i 's/odoo/codespace/g' /etc/odoo.conf"
