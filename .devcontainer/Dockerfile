@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/devcontainers/universal:2
 
-RUN apt-get update && apt-get install libsasl2-dev python-dev libldap2-dev libssl-dev
+RUN apt-get update && apt-get install -y --no-install-recommends libsasl2-dev python-dev libldap2-dev libssl-dev
 
 RUN git clone -b 16.0 --depth 1 https://github.com/odoo/odoo.git /workspaces/odoo
 
