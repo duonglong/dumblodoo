@@ -6,7 +6,7 @@
       "vscode": {
         "extensions": [
           "github.codespaces",
-          "ms-python.python",
+          "ms-python.python"
         ]
       },
       "codespaces": {
