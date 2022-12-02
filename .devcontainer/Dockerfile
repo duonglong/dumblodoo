@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/devcontainers/universal:2
 
 RUN apt-get update && apt-get install -y --no-install-recommends libsasl2-dev python-dev libldap2-dev libssl-dev
 
-RUN git clone -b 16.0 --depth 1 https://github.com/odoo/odoo.git /workspaces/odoo
+RUN git clone -b 16.0 --depth 1 https://github.com/odoo/odoo.git /var/lib/docker/codespacemount/workspace/odoo
 
 RUN cd /workspaces/odoo && sed -n -e '/^Depends:/,/^Pre/ s/ python3-\(.*\),/python3-\1/p' debian/control | sudo xargs apt-get install -y && pip install -r requirements.txt
 
