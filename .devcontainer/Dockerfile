@@ -10,7 +10,7 @@ RUN npm install -g rtlcss
 
 RUN cp /odoo/debian/odoo.conf /etc/odoo.conf
 
-RUN echo "addons_path = /workspaces/$RepositoryName,/workspaces/odoo/addons" >> /etc/odoo.conf
+RUN echo "addons_path = /workspaces/dumblodoo,/odoo/addons" >> /etc/odoo.conf
 
 RUN sed -i 's/odoo/codespace/g' /etc/odoo.conf
 

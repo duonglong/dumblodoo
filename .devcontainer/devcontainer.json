@@ -2,6 +2,7 @@
   "build": { 
     "dockerfile": "Dockerfile"
   },
+  "postCreateCommand": "service postgresql start",
   "customizations": {
       "vscode": {
         "extensions": [
