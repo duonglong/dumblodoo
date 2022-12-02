@@ -8,7 +8,6 @@ RUN cd /odoo && sed -n -e '/^Depends:/,/^Pre/ s/ python3-\(.*\),/python3-\1/p' d
 
 RUN npm install -g rtlcss
 
-
 RUN cp /odoo/debian/odoo.conf /etc/odoo.conf
 
 RUN echo "addons_path = $CODESPACE_VSCODE_FOLDER,/workspaces/odoo/addons" >> /etc/odoo.conf
