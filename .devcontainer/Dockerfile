@@ -21,11 +21,7 @@ RUN sudo apt-get update
 # If you want a specific version, use 'postgresql-12' or similar instead of 'postgresql':
 RUN apt-get -y install postgresql
 
-RUN service postgresql start
-
-RUN sleep 3
-
-RUN sudo -u postgres createuser -s odoo && createdb odoo
+CMD service postgresql start && sudo -u postgres createuser -s odoo && createdb odoo
 
 RUN cp /workspaces/odoo/debian/odoo.conf /workspaces/odoo.conf
 
