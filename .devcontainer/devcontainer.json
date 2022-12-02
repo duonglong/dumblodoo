@@ -5,7 +5,8 @@
   "customizations": {
       "vscode": {
         "extensions": [
-          "github.codespaces"          
+          "github.codespaces",
+          "ms-python.python",
         ]
       },
       "codespaces": {
